@@ -61,10 +61,18 @@ if st.button("🔄 Ambil Data Realtime"):
         st.error("Data tidak ditemukan.")
         st.stop()
 
-    harga = float(df["Close"].iloc[-1])
-    tinggi = float(df["High"].iloc[-1])
-    rendah = float(df["Low"].iloc[-1])
-    buka = float(df["Open"].iloc[-1])
+     last = df.iloc[-1]
+
+harga = last["Close"]
+buka = last["Open"]
+tinggi = last["High"]
+rendah = last["Low"]
+
+st.metric("Harga", f"{harga}")
+st.metric("Open", f"{buka}")
+st.metric("High", f"{tinggi}")
+st.metric("Low", f"{rendah}")
+    
 
     c1, c2, c3, c4 = st.columns(4)
 
