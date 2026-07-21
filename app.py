@@ -310,6 +310,120 @@ if hasil:
         pd.DataFrame(hasil),
         use_container_width=True
       )
+    # ======================
+# MULTI TIMEFRAME ANALYSIS
+# ======================
+
+st.divider()
+st.subheader("🧠 Multi Timeframe AI")
+
+timeframes = ["15m", "1h", "1d"]
+hasil_tf = []
+
+for tf in timeframes:
+    try:
+        d = yf.download(
+            symbol,
+            period="30d",
+            interval=tf,
+            progress=False,
+            auto_adjust=False
+        )
+
+        if d.empty:
+            continue
+
+        if isinstance(d.columns, pd.MultiIndex):
+            d.columns = d.columns.droplevel(1)
+
+        d = d.dropna()
+
+        d["EMA20"] = EMAIndicator(d["Close"], 20).ema_indicator()
+        d["EMA50"] = EMAIndicator(d["Close"], 50).ema_indicator()
+
+        d["RSI"] = RSIIndicator(d["Close"]).rsi()
+
+        x = d.iloc[-1]
+
+        score = 0
+
+        if x["EMA20"] > x["EMA50"]:
+            score += 50
+
+        if x["RSI"] > 50:
+            score += 50
+
+        if score >= 80:
+            signal = "🟢 BUY"
+        elif score >= 50:
+            signal = "🟡 HOLD"
+        else:
+            signal = "🔴 SELL"
+
+        hasil_tf.append({
+            "Timeframe": tf,
+            "Signal": signal,
+            "Confidence": score
+        })
+
+    except:
+        pass
+
+if hasil_tf:
+    st.dataframe(
+        pd.DataFrame(hasil_tf),
+        use_container_width=True
+    )
+    # ======================
+# VOLUME ANALYSIS
+# ======================
+
+st.divider()
+st.subheader("📊 Volume Analysis")
+
+df["VOL_MA20"] = df["Volume"].rolling(20).mean()
+
+volume_now = float(df["Volume"].iloc[-1])
+volume_avg = float(df["VOL_MA20"].iloc[-1])
+
+if volume_avg > 0:
+    volume_ratio = volume_now / volume_avg
+else:
+    volume_ratio = 1
+
+if volume_ratio >= 2:
+    volume_signal = "🔥 Volume Spike"
+elif volume_ratio >= 1.3:
+    volume_signal = "🟢 Above Average"
+else:
+    volume_signal = "⚪ Normal"
+
+c1, c2, c3 = st.columns(3)
+
+c1.metric("Volume", f"{volume_now:,.0f}")
+c2.metric("Avg 20", f"{volume_avg:,.0f}")
+c3.metric("Status", volume_signal)
+# ======================
+# BREAKOUT DETECTION
+# ======================
+
+st.divider()
+st.subheader("🚀 Breakout Detection")
+
+high20 = df["High"].tail(20).max()
+low20 = df["Low"].tail(20).min()
+close = float(df["Close"].iloc[-1])
+
+if close >= high20 * 0.998:
+    breakout = "🚀 Bullish Breakout"
+
+elif close <= low20 * 1.002:
+    breakout = "🔻 Bearish Breakdown"
+
+else:
+    breakout = "➡️ Sideways"
+
+st.info(breakout)
   # ======================
 # SUPPORT & RESISTANCE
 # ======================
