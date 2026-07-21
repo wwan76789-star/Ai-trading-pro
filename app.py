@@ -9,7 +9,15 @@ from streamlit_autorefresh import st_autorefresh
 from ta.trend import EMAIndicator, MACD
 from ta.momentum import RSIIndicator
 from ta.volatility import AverageTrueRange
+@st.cache_data(ttl=30)
+def get_data(symbol, period, interval):
+    df = get_data(symbol, period, interval)
+    )
 
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.droplevel(1)
+
+    return df.dropna()
 # ======================
 # CONFIG
 # ======================
@@ -35,7 +43,9 @@ st.info(
 # ======================
 # SIDEBAR
 # ======================
-
+if st.sidebar.button("🔄 Refresh Cache"):
+    st.cache_data.clear()
+    st.rerun()
 market = st.sidebar.selectbox(
     "Market",
     [
@@ -328,13 +338,13 @@ for kode in watchlist[kategori]:
 
     try:
 
-        d = yf.download(
-            kode,
-            period="10d",
-            interval="1h",
-            auto_adjust=False,
-            progress=False
-        )
+      d = yf.download(
+    kode,
+    period="5d",
+    interval="1h",
+    auto_adjust=False,
+    progress=False
+      )
 
         if d.empty:
             continue
