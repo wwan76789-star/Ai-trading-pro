@@ -162,7 +162,7 @@ c1.metric("Signal", signal)
 c2.metric("Confidence", f"{confidence}%")
 c3.metric("Entry", f"{entry:,.2f}")
 c4.metric("RSI", f"{last['RSI']:.2f}")
-
+st.progress(confidence / 100)
 st.success(f"Stop Loss : {sl:,.2f}")
 st.success(f"Take Profit : {tp:,.2f}")
 
@@ -464,7 +464,50 @@ c1, c2, c3 = st.columns(3)
 c1.metric("Risk", f"{risk:,.2f}")
 c2.metric("Reward", f"{reward:,.2f}")
 c3.metric("R:R", f"1 : {rr:.2f}")
+# ======================
+# AI RECOMMENDATION
+# ======================
 
+st.divider()
+st.subheader("🤖 AI Recommendation")
+
+reasons = []
+
+if last["EMA20"] > last["EMA50"]:
+    reasons.append("✅ EMA Bullish")
+
+if last["MACD"] > last["MACD_SIGNAL"]:
+    reasons.append("✅ MACD Bullish")
+
+if 50 <= last["RSI"] <= 70:
+    reasons.append("✅ RSI Sehat")
+
+if volume_ratio >= 1.3:
+    reasons.append("✅ Volume Mendukung")
+
+if breakout == "🚀 Bullish Breakout":
+    reasons.append("✅ Breakout Terdeteksi")
+
+if confidence >= 85:
+    warna = "success"
+    rekomendasi = "🟢 STRONG BUY"
+
+elif confidence >= 70:
+    warna = "info"
+    rekomendasi = "🟢 BUY"
+
+elif confidence >= 50:
+    warna = "warning"
+    rekomendasi = "🟡 HOLD"
+
+else:
+    warna = "error"
+    rekomendasi = "🔴 SELL"
+
+getattr(st, warna)(rekomendasi)
+
+for r in reasons:
+    st.write(r)
 # ======================
 # TREND
 # ======================
@@ -487,3 +530,21 @@ st.dataframe(
     df.tail(20),
     use_container_width=True
 )
+# ======================
+# MARKET SUMMARY
+# ======================
+
+st.divider()
+st.subheader("📌 Market Summary")
+
+st.markdown(f"""
+**Kode** : `{symbol}`
+
+- Signal : **{signal}**
+- AI Score : **{confidence}/100**
+- Entry : **{entry:,.2f}**
+- Stop Loss : **{sl:,.2f}**
+- Take Profit : **{tp:,.2f}**
+- Trend : **{"Bullish" if last["EMA20"] > last["EMA50"] else "Bearish"}**
+- Breakout : **{breakout}**
+""")
