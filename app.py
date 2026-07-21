@@ -2,7 +2,8 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go
-
+from streamlit_autorefresh import st_autorefresh
+from datetime import datetime
 from ta.trend import EMAIndicator, MACD
 from ta.momentum import RSIIndicator
 from ta.volatility import AverageTrueRange
@@ -15,7 +16,14 @@ st.set_page_config(
 
 st.title("📈 AI Trading Pro")
 st.caption("Realtime Trading Dashboard")
+st_autorefresh(
+    interval=30000,
+    key="refresh"
+)
 
+st.info(
+    f"🕒 Update Terakhir : {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}"
+)
 # ======================
 # Sidebar
 # ======================
@@ -53,7 +61,27 @@ interval = st.sidebar.selectbox(
     ],
     index=1
 )
+st.sidebar.divider()
 
+favorit = st.sidebar.selectbox(
+    "⭐ Watchlist Favorit",
+    [
+        "BBCA.JK",
+        "BBRI.JK",
+        "BMRI.JK",
+        "TLKM.JK",
+        "BTC-USD",
+        "ETH-USD",
+        "SOL-USD",
+        "BNB-USD",
+        "EURUSD=X",
+        "USDJPY=X",
+        "GC=F"
+    ]
+)
+
+if st.sidebar.button("Gunakan"):
+    symbol = favorit
 period = "7d"
 
 # ======================
