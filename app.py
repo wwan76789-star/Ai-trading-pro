@@ -129,7 +129,11 @@ df["ATR"] = atr.average_true_range()
 # ======================
 # SMART AI SCORE
 # ======================
+last = df.iloc[-1]
 
+entry = float(last["Close"])
+sl = entry - float(last["ATR"] * 2)
+tp = entry + float(last["ATR"] * 3)
 ai_score = 0
 alasan = []
 
