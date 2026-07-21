@@ -104,42 +104,42 @@ df["ATR"] = atr.average_true_range()
 
 last = df.iloc[-1]
 
-score = 0
+ai_score = 0
 alasan = []
 
 # EMA
 if last["EMA20"] > last["EMA50"]:
-    score += 30
+    ai_score += ...
     alasan.append("EMA Bullish")
 else:
     alasan.append("EMA Bearish")
 
 # MACD
 if last["MACD"] > last["MACD_SIGNAL"]:
-    score += 25
+    ai_score += ...
     alasan.append("MACD Bullish")
 else:
     alasan.append("MACD Bearish")
 
 # RSI
 if 50 <= last["RSI"] <= 70:
-    score += 20
+    ai_score += ...
     alasan.append("RSI Sehat")
 elif last["RSI"] < 30:
-    score += 10
+    ai_score += ...
     alasan.append("Oversold")
 elif last["RSI"] > 70:
     alasan.append("Overbought")
 
 # Trend
 if last["Close"] > last["EMA20"]:
-    score += 15
+    ai_score += ...
 
 # ATR
 if last["ATR"] < df["ATR"].mean():
-    score += 10
+    ai_score += ...
 
-confidence = min(score, 100)
+confidence = min(ai_score, 100)
 
 if confidence >= 70:
     signal = "🟢 BUY"
