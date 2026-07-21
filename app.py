@@ -62,7 +62,6 @@ if st.button("🔄 Ambil Data Realtime"):
         st.stop()
 
          last = df.iloc[-1]
-
     harga = last["Close"]
     buka = last["Open"]
     tinggi = last["High"]
