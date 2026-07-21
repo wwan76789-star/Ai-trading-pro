@@ -308,7 +308,8 @@ if hasil:
         pd.DataFrame(hasil),
         use_container_width=True
       )
-    # ======================
+
+# ======================
 # MULTI TIMEFRAME ANALYSIS
 # ======================
 
