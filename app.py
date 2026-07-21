@@ -43,19 +43,24 @@ if st.button("🔄 Ambil Data Realtime"):
         st.error("Data tidak ditemukan.")
         st.stop()
 
-    last = df.iloc[-1]
+    if isinstance(df.columns, pd.MultiIndex):
+    df.columns = df.columns.droplevel(1)
 
-    harga = last["Close"]
-    buka = last["Open"]
-    tinggi = last["High"]
-    rendah = last["Low"]
+last = df.iloc[-1]
+
+harga = float(last["Close"])
+buka = float(last["Open"])
+tinggi = float(last["High"])
+rendah = float(last["Low"])
+
+    
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("Harga", str(harga))
-    c2.metric("Open", str(buka))
-    c3.metric("High", str(tinggi))
-    c4.metric("Low", str(rendah))
+    c1.metric("Harga", f"{harga:,.2f}")
+c2.metric("Open", f"{buka:,.2f}")
+c3.metric("High", f"{tinggi:,.2f}")
+c4.metric("Low", f"{rendah:,.2f}")
 
     st.line_chart(df["Close"])
 
