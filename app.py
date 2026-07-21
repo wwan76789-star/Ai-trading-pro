@@ -149,7 +149,9 @@ elif confidence >= 50:
     signal = "🟡 HOLD"
 else:
     signal = "🔴 SELL"
-
+entry = float(last["Close"])
+sl = entry - float(last["ATR"] * 2)
+tp = entry + float(last["ATR"] * 3)
 # ======================
 # DASHBOARD
 # ======================
@@ -373,7 +375,7 @@ if hasil_tf:
         pd.DataFrame(hasil_tf),
         use_container_width=True
     )
-    # ======================
+# ======================
 # VOLUME ANALYSIS
 # ======================
 
