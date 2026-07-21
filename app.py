@@ -156,12 +156,12 @@ elif last["RSI"] < 30:
     alasan.append("✅ RSI Oversold")
 
 # Volume
-if volume_ratio >= 1.5:
+
     ai_score += 15
     alasan.append("✅ Volume Spike")
 
 # Breakout
-if breakout == "🚀 Bullish Breakout":
+
     ai_score += 15
     alasan.append("✅ Breakout")
 
