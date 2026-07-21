@@ -61,25 +61,19 @@ if st.button("🔄 Ambil Data Realtime"):
         st.error("Data tidak ditemukan.")
         st.stop()
 
-     last = df.iloc[-1]
+         last = df.iloc[-1]
 
-harga = last["Close"]
-buka = last["Open"]
-tinggi = last["High"]
-rendah = last["Low"]
-
-st.metric("Harga", f"{harga}")
-st.metric("Open", f"{buka}")
-st.metric("High", f"{tinggi}")
-st.metric("Low", f"{rendah}")
-    
+    harga = last["Close"]
+    buka = last["Open"]
+    tinggi = last["High"]
+    rendah = last["Low"]
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("Harga", f"{harga:.2f}")
-    c2.metric("Open", f"{buka:.2f}")
-    c3.metric("High", f"{tinggi:.2f}")
-    c4.metric("Low", f"{rendah:.2f}")
+    c1.metric("Harga", f"{harga}")
+    c2.metric("Open", f"{buka}")
+    c3.metric("High", f"{tinggi}")
+    c4.metric("Low", f"{rendah}")
 
     st.line_chart(df["Close"])
 
