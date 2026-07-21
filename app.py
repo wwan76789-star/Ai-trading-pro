@@ -109,48 +109,46 @@ alasan = []
 
 # EMA
 if last["EMA20"] > last["EMA50"]:
-    ai_score += ...
+    ai_score += 30
     alasan.append("EMA Bullish")
 else:
     alasan.append("EMA Bearish")
 
 # MACD
 if last["MACD"] > last["MACD_SIGNAL"]:
-    ai_score += ...
+    ai_score += 25
     alasan.append("MACD Bullish")
 else:
     alasan.append("MACD Bearish")
 
 # RSI
 if 50 <= last["RSI"] <= 70:
-    ai_score += ...
+    ai_score += 20
     alasan.append("RSI Sehat")
 elif last["RSI"] < 30:
-    ai_score += ...
+    ai_score += 15
     alasan.append("Oversold")
 elif last["RSI"] > 70:
     alasan.append("Overbought")
 
 # Trend
 if last["Close"] > last["EMA20"]:
-    ai_score += ...
+    ai_score += 10
 
 # ATR
 if last["ATR"] < df["ATR"].mean():
-    ai_score += ...
+    ai_score += 10
 
 confidence = min(ai_score, 100)
 
-if confidence >= 70:
+if confidence >= 85:
+    signal = "🟢 STRONG BUY"
+elif confidence >= 70:
     signal = "🟢 BUY"
-elif confidence >= 45:
+elif confidence >= 50:
     signal = "🟡 HOLD"
 else:
     signal = "🔴 SELL"
-
-entry = float(last["Close"])
-sl = entry - float(last["ATR"] * 2)
-tp = entry + float(last["ATR"] * 3)
 
 # ======================
 # DASHBOARD
