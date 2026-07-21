@@ -127,45 +127,49 @@ atr = AverageTrueRange(
 
 df["ATR"] = atr.average_true_range()
 # ======================
-# AI SIGNAL
+# SMART AI SCORE
 # ======================
-
-last = df.iloc[-1]
 
 ai_score = 0
 alasan = []
 
 # EMA
 if last["EMA20"] > last["EMA50"]:
-    ai_score += 30
-    alasan.append("EMA Bullish")
-else:
-    alasan.append("EMA Bearish")
+    ai_score += 20
+    alasan.append("✅ EMA Bullish")
 
 # MACD
 if last["MACD"] > last["MACD_SIGNAL"]:
-    ai_score += 25
-    alasan.append("MACD Bullish")
-else:
-    alasan.append("MACD Bearish")
+    ai_score += 20
+    alasan.append("✅ MACD Bullish")
 
 # RSI
 if 50 <= last["RSI"] <= 70:
-    ai_score += 20
-    alasan.append("RSI Sehat")
-elif last["RSI"] < 30:
     ai_score += 15
-    alasan.append("Oversold")
-elif last["RSI"] > 70:
-    alasan.append("Overbought")
+    alasan.append("✅ RSI Ideal")
+elif last["RSI"] < 30:
+    ai_score += 10
+    alasan.append("✅ RSI Oversold")
+
+# Volume
+if volume_ratio >= 1.5:
+    ai_score += 15
+    alasan.append("✅ Volume Spike")
+
+# Breakout
+if breakout == "🚀 Bullish Breakout":
+    ai_score += 15
+    alasan.append("✅ Breakout")
 
 # Trend
 if last["Close"] > last["EMA20"]:
     ai_score += 10
+    alasan.append("✅ Harga di atas EMA20")
 
 # ATR
 if last["ATR"] < df["ATR"].mean():
-    ai_score += 10
+    ai_score += 5
+    alasan.append("✅ Volatilitas Stabil")
 
 confidence = min(ai_score, 100)
 
@@ -177,9 +181,6 @@ elif confidence >= 50:
     signal = "🟡 HOLD"
 else:
     signal = "🔴 SELL"
-entry = float(last["Close"])
-sl = entry - float(last["ATR"] * 2)
-tp = entry + float(last["ATR"] * 3)
 # ======================
 # DASHBOARD
 # ======================
@@ -193,7 +194,14 @@ c4.metric("RSI", f"{last['RSI']:.2f}")
 st.progress(confidence / 100)
 st.success(f"Stop Loss : {sl:,.2f}")
 st.success(f"Take Profit : {tp:,.2f}")
-
+if confidence >= 85:
+    st.success(f"AI Score : {confidence}/100")
+elif confidence >= 70:
+    st.info(f"AI Score : {confidence}/100")
+elif confidence >= 50:
+    st.warning(f"AI Score : {confidence}/100")
+else:
+    st.error(f"AI Score : {confidence}/100")
 with st.expander("Analisis AI"):
     for x in alasan:
         st.write("✅", x)
